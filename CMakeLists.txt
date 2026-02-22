@@ -17,3 +17,4 @@ add_subdirectory(search)
 add_subdirectory(cube)
 
 add_executable(solver main.cpp)
+target_link_libraries(solver PUBLIC cube search)

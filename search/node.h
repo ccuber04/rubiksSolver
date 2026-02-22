@@ -5,8 +5,9 @@
 template<typename State, typename Action>
 class Node {
 public:
-    Node(State& state, std::shared_ptr<Node>& parent, const Action& action, const double& path_cost)
+    Node(State& state, Node* parent, const Action& action, const double& path_cost)
         : state{state}, parent{parent}, action{action}, path_cost{path_cost} {}
+    ~Node() = default;
 
     int depth(const Node& node) {
         if (node.parent == nullptr) {
@@ -17,7 +18,7 @@ public:
 
 private:
     State state;
-    Node parent;
+    Node* parent;
     Action action;
     double path_cost;
 };
