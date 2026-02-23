@@ -5,7 +5,7 @@
 template<typename State, typename Action>
 class Node {
 public:
-    Node(State& state, Node* parent, const Action& action, const double& path_cost)
+    Node(State& state, Node* parent=nullptr, const Action& action=NULL, const double& path_cost=0)
         : state{state}, parent{parent}, action{action}, path_cost{path_cost} {}
     ~Node() = default;
 
@@ -16,7 +16,6 @@ public:
         return depth(node.parent) + 1;
     }
 
-private:
     State state;
     Node* parent;
     Action action;
