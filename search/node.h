@@ -5,7 +5,9 @@
 template<typename State, typename Action>
 class Node {
 public:
-    Node(State& state, Node* parent=nullptr, const Action& action=NULL, const double& path_cost=0)
+    Node(State state)
+        : state{state}, parent{nullptr}, path_cost{0} {}
+    Node(State state, Node* parent, const Action& action, const double& path_cost)
         : state{state}, parent{parent}, action{action}, path_cost{path_cost} {}
     ~Node() = default;
 

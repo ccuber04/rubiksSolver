@@ -127,38 +127,28 @@ void Cube::apply_move(Move m) { // change to switch statement??
 }
 
 bool Cube::is_solved() const {
-    bool solved = false;
     for (int face = 0; face < 6; ++face) {
         for (int row = 0; row < 3; ++row) {
             for (int col = 0; col < 3; ++col) {
-                solved = (faces[face][row][col] == static_cast<Color>(face));
-                if (!solved) {
-                    break;
+                if (faces[face][row][col] != static_cast<Color>(face)) {
+                    return false;
                 }
             }
-            if (!solved) {
-                break;
-            }
-        }
-        if (!solved) {
-            break;
         }
     }
-    return solved;
+    return true;
 }
 
 void Cube::scramble() {
-    this->apply_move(L);
-    this->print();
-    this->apply_move(B);
-    this->print();
+    this->apply_move(U);
     this->apply_move(R);
+    this->apply_move(U);
 }
 
 void Cube::print() {
     // print U face
     for (int row = 0; row < 3; ++row) {
-        std::cout << "\t\t";
+        std::cout << "\t";
         for (int col = 0; col < 3; ++col) {
             std::cout << color_to_string(faces[0][row][col]) << " ";
         }
@@ -178,7 +168,7 @@ void Cube::print() {
 
     // print D face
     for (int row = 0; row < 3; ++row) {
-        std::cout << "\t\t";
+        std::cout << "\t";
         for (int col = 0; col < 3; ++col) {
             std::cout << color_to_string(faces[5][row][col]) << " ";
         }
@@ -186,6 +176,21 @@ void Cube::print() {
     }
 }
 
+bool Cube::operator==(const Cube& cube) const {
+    bool solved = false;
+    for (int face = 0; face < 6; ++face) {
+        for (int row = 0; row < 3; ++row) {
+            for (int col = 0; col < 3; ++col) {
+                if (faces[face][row][col] != cube.faces[face][row][col]) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
+// helpers
 std::string color_to_string(Color c) {
     switch (c) {
     case White:
