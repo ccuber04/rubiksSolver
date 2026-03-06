@@ -38,7 +38,7 @@ Cube result(Cube cube, const Move& m) {
 }
 
 std::list<Move> actions(const Cube&) {
-    std::list<Move> m{R, U, F, L, D, B};
+    std::list<Move> m{R, Rp, U, Up, F, Fp, L, Lp, D, Dp, B, Bp};
     return m;
 }
 

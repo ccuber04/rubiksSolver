@@ -4,7 +4,7 @@
 #include <string>
 
 enum Color {White, Orange, Green, Red, Blue, Yellow};
-enum Move {R, U, F, L, D, B};
+enum Move {R, Rp, U, Up, F, Fp, L, Lp, D, Dp, B, Bp};
 
 using Face = std::array<std::array<Color, 3>, 3>;
 using Faces = std::array<Face, 6>;

@@ -37,6 +37,9 @@ void Cube::apply_move(Move m) { // change to switch statement??
         rotate_face(faces[3]);
         break;
     }
+    case Rp: {
+        break;
+    }
     case U: {
         std::cout << "U\n";
         std::array<Color, 3> temp = faces[1][0];
@@ -45,6 +48,9 @@ void Cube::apply_move(Move m) { // change to switch statement??
         faces[3][0] = faces[4][0];
         faces[4][0] = temp;
         rotate_face(faces[0]);
+        break;
+    }
+    case Up: {
         break;
     }
     case F: {
@@ -70,6 +76,9 @@ void Cube::apply_move(Move m) { // change to switch statement??
         rotate_face(faces[2]);
         break;
     }
+    case Fp: {
+        break;
+    }
     case L: {
         std::cout << "L\n";
         int col = 0;
@@ -92,6 +101,9 @@ void Cube::apply_move(Move m) { // change to switch statement??
         rotate_face(faces[1]);
         break;
     }
+    case Lp: {
+        break;
+    }
     case D: {
         std::cout << "D\n";
         std::array<Color, 3> temp = faces[4][2];
@@ -100,6 +112,9 @@ void Cube::apply_move(Move m) { // change to switch statement??
         faces[2][2] = faces[1][2];
         faces[1][2] = temp;
         rotate_face(faces[5]);
+        break;
+    }
+    case Dp: {
         break;
     }
     case B: {
@@ -121,6 +136,9 @@ void Cube::apply_move(Move m) { // change to switch statement??
         turn_strips_cols(faces, strips, 1, 0, 0); // L <- U (reversed)
 
         rotate_face(faces[4]);
+        break;
+    }
+    case Bp: {
         break;
     }
     }
