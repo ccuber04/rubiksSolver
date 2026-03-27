@@ -2,140 +2,183 @@
 #include <iostream>
 #include <algorithm>
 
-Cube::Cube() {
-    for (int face = 0; face < 6; ++face) {
-        for (int row = 0; row < 3; ++row) {
-            for (int col = 0; col < 3; ++col) {
-                faces[face][row][col] = static_cast<Color>(face);
-            }
-        }
+Cube::Cube(int size)
+    : size{size}, faces(6*size*size) {
+    for (int piece = 0; piece < 6 * size * size; ++piece) { // (0-8) white, (9-17) orange, (18-26) green, (27-35) red, (36-44) blue, (45-53) yellow
+        faces[piece] = static_cast<Color>(piece / (size * size));
     }
 }
 
-void Cube::apply_move(Move m) { // change to switch statement??
+void Cube::apply_move(Move m) {
     switch (m) {
     case R: {
         std::cout << "R\n";
-        int col = 2;
-        Strips strips; // [0->0, 1->4, 2->5, 3->2]
-
-        // create strips that will turn
-        strips[0] = create_strip(faces, 0, col); // U
-        std::reverse(std::begin(strips[0]), std::end(strips[0])); // reverse U for B
-        strips[1] = create_strip(faces, 4, 0); // B
-        std::reverse(std::begin(strips[1]), std::end(strips[1])); // reverse B
-        strips[2] = create_strip(faces, 5, col); // D
-        strips[3] = create_strip(faces, 2, col); // F
-
-        // turn strip
-        turn_strips_cols(faces, strips, 0, col, 3); // U <- F
-        turn_strips_cols(faces, strips, 2, col, 2); // F <- D
-        turn_strips_cols(faces, strips, 5, col, 1); // D <- B
-        turn_strips_cols(faces, strips, 4, 0, 0); // B <- U (reversed)
-
-        // rotate face
-        rotate_face(faces[3]);
+        std::swap(faces[2], faces[20]);
+        std::swap(faces[5], faces[23]);
+        std::swap(faces[8], faces[26]); // F->U
+        std::swap(faces[20], faces[47]);
+        std::swap(faces[23], faces[50]);
+        std::swap(faces[26], faces[53]); // D->F
+        std::swap(faces[47], faces[42]);
+        std::swap(faces[50], faces[39]);
+        std::swap(faces[53], faces[36]); // B->D and U->B
+        std::swap(faces[27], faces[29]);
+        std::swap(faces[27], faces[33]);
+        std::swap(faces[33], faces[35]); // corners rotate
+        std::swap(faces[28], faces[32]);
+        std::swap(faces[28], faces[30]);
+        std::swap(faces[30], faces[34]); // edges rotate
         break;
     }
     case Rp: {
+        std::cout << "Rp\n";
+        std::swap(faces[2], faces[42]);
+        std::swap(faces[5], faces[39]);
+        std::swap(faces[8], faces[36]); // B->U
+        std::swap(faces[42], faces[47]);
+        std::swap(faces[39], faces[50]);
+        std::swap(faces[36], faces[53]); // D->B
+        std::swap(faces[47], faces[20]);
+        std::swap(faces[50], faces[23]);
+        std::swap(faces[53], faces[26]); // F->D and U->F
+        std::swap(faces[27], faces[33]);
+        std::swap(faces[27], faces[29]);
+        std::swap(faces[29], faces[35]); // corners rotate
+        std::swap(faces[28], faces[30]);
+        std::swap(faces[28], faces[32]);
+        std::swap(faces[32], faces[34]); // edges rotate
         break;
     }
     case U: {
         std::cout << "U\n";
-        std::array<Color, 3> temp = faces[1][0];
-        faces[1][0] = faces[2][0];
-        faces[2][0] = faces[3][0];
-        faces[3][0] = faces[4][0];
-        faces[4][0] = temp;
-        rotate_face(faces[0]);
+        std::swap(faces[9], faces[18]);
+        std::swap(faces[10], faces[19]);
+        std::swap(faces[11], faces[20]); // F->L
+        std::swap(faces[18], faces[27]);
+        std::swap(faces[19], faces[28]);
+        std::swap(faces[20], faces[29]); // R->F
+        std::swap(faces[27], faces[36]);
+        std::swap(faces[28], faces[37]);
+        std::swap(faces[29], faces[38]); // B->R and L->B
+        std::swap(faces[0], faces[2]);
+        std::swap(faces[0], faces[6]);
+        std::swap(faces[6], faces[8]); // corners rotate
+        std::swap(faces[1], faces[5]);
+        std::swap(faces[1], faces[3]);
+        std::swap(faces[3], faces[7]); // edges rotate
         break;
     }
     case Up: {
+        std::cout << "Up\n";
+        std::swap(faces[9], faces[36]);
+        std::swap(faces[10], faces[37]);
+        std::swap(faces[11], faces[38]); // B->L
+        std::swap(faces[36], faces[27]);
+        std::swap(faces[37], faces[28]);
+        std::swap(faces[38], faces[29]); // R->B
+        std::swap(faces[27], faces[18]);
+        std::swap(faces[28], faces[19]);
+        std::swap(faces[29], faces[20]); // F->R and L->F
+        std::swap(faces[0], faces[6]);
+        std::swap(faces[0], faces[2]);
+        std::swap(faces[2], faces[8]); // corners rotate
+        std::swap(faces[1], faces[3]);
+        std::swap(faces[1], faces[5]);
+        std::swap(faces[5], faces[7]); // edges rotate
         break;
     }
     case F: {
         std::cout << "F\n";
-        int col = 2;
-        int row = 2;
-        Strips strips; // [0->0, 1->2, 2->5, 3->4]
-
-        // create strips that will turn
-        strips[0] = faces[0][2]; // U
-        strips[1] = create_strip(faces, 3, 0); // R
-        std::reverse(std::begin(strips[1]), std::end(strips[1])); // reverse R
-        strips[2] = faces[5][0]; // D
-        strips[3] = create_strip(faces, 1, col); // L
-        std::reverse(std::begin(strips[3]), std::end(strips[3])); // reverse
-
-        // turn strip
-        turn_strips_rows(faces, strips, 0, row, 3); // U <- L
-        turn_strips_cols(faces, strips, 1, col, 2); // L <- D
-        turn_strips_rows(faces, strips, 5, 0, 1); // D <- R
-        turn_strips_cols(faces, strips, 3, 0, 0); // R <- U (reversed)
-
-        rotate_face(faces[2]);
+        std::swap(faces[27], faces[6]);
+        std::swap(faces[30], faces[7]);
+        std::swap(faces[33], faces[8]); // U->R
+        std::swap(faces[6], faces[11]);
+        std::swap(faces[7], faces[14]);
+        std::swap(faces[9], faces[17]); // L->U
+        std::swap(faces[11], faces[45]);
+        std::swap(faces[14], faces[46]);
+        std::swap(faces[17], faces[47]); // D->L and R->D
+        std::swap(faces[18], faces[20]);
+        std::swap(faces[18], faces[24]);
+        std::swap(faces[24], faces[26]); // corners rotate
+        std::swap(faces[19], faces[23]);
+        std::swap(faces[19], faces[21]);
+        std::swap(faces[21], faces[25]); // edges rotate
         break;
     }
     case Fp: {
+        std::cout << "Fp\n";
+        std::swap(faces[27], faces[45]);
+        std::swap(faces[30], faces[46]);
+        std::swap(faces[33], faces[47]); // D->R
+        std::swap(faces[45], faces[11]);
+        std::swap(faces[46], faces[14]);
+        std::swap(faces[47], faces[17]); // L->D
+        std::swap(faces[11], faces[6]);
+        std::swap(faces[14], faces[7]);
+        std::swap(faces[17], faces[8]); // U->L and R->U
+        std::swap(faces[18], faces[24]);
+        std::swap(faces[18], faces[20]);
+        std::swap(faces[20], faces[26]); // corners rotate
+        std::swap(faces[19], faces[21]);
+        std::swap(faces[19], faces[23]);
+        std::swap(faces[23], faces[25]); // edges rotate
         break;
     }
     case L: {
         std::cout << "L\n";
-        int col = 0;
-        Strips strips; // [0->0, 1->4, 2->5, 3->2]
-
-        // create strips that will turn
-        strips[0] = create_strip(faces, 0, col); // U
-        strips[1] = create_strip(faces, 2, 0); // F
-        strips[2] = create_strip(faces, 5, col); // D
-        std::reverse(std::begin(strips[2]), std::end(strips[2]));
-        strips[3] = create_strip(faces, 4, col); // B
-        std::reverse(std::begin(strips[3]), std::end(strips[3])); // reverse B
-
-        // turn strip
-        turn_strips_cols(faces, strips, 0, col, 3); // U <- B
-        turn_strips_cols(faces, strips, 4, 2, 2); // B <- D
-        turn_strips_cols(faces, strips, 5, col, 1); // D <- F
-        turn_strips_cols(faces, strips, 2, col, 0); // F <- U (reversed)
-
-        rotate_face(faces[1]);
+        std::swap(faces[2], faces[42]);
+        std::swap(faces[5], faces[39]);
+        std::swap(faces[8], faces[36]); // B->U
+        std::swap(faces[42], faces[47]);
+        std::swap(faces[39], faces[50]);
+        std::swap(faces[36], faces[53]); // D->B
+        std::swap(faces[47], faces[20]);
+        std::swap(faces[50], faces[23]);
+        std::swap(faces[53], faces[26]); // F->D and U->F
+        std::swap(faces[27], faces[33]);
+        std::swap(faces[27], faces[29]);
+        std::swap(faces[29], faces[35]); // corners rotate
+        std::swap(faces[28], faces[30]);
+        std::swap(faces[28], faces[32]);
+        std::swap(faces[32], faces[34]); // edges rotate
         break;
     }
     case Lp: {
         break;
     }
     case D: {
-        std::cout << "D\n";
-        std::array<Color, 3> temp = faces[4][2];
-        faces[4][2] = faces[3][2];
-        faces[3][2] = faces[2][2];
-        faces[2][2] = faces[1][2];
-        faces[1][2] = temp;
-        rotate_face(faces[5]);
+        // std::cout << "D\n";
+        // std::array<Color, 3> temp = faces[4][2];
+        // faces[4][2] = faces[3][2];
+        // faces[3][2] = faces[2][2];
+        // faces[2][2] = faces[1][2];
+        // faces[1][2] = temp;
+        // rotate_face(faces[5]);
         break;
     }
     case Dp: {
         break;
     }
     case B: {
-        std::cout << "B\n";
-        Strips strips; // [0->0, 1->1, 2->5, 3->3]
-
-        // create strips that will turn
-        strips[0] = faces[0][0]; // U
-        std::reverse(std::begin(strips[0]), std::end(strips[0])); // reverse U
-        strips[1] = create_strip(faces, 1, 0); // L
-        strips[2] = faces[5][2]; // D
-        std::reverse(std::begin(strips[2]), std::end(strips[2])); // reverse D
-        strips[3] = create_strip(faces, 3, 2); // R
-
-        // turn strip
-        turn_strips_rows(faces, strips, 0, 0, 3); // U <- R
-        turn_strips_cols(faces, strips, 3, 2, 2); // R <- D
-        turn_strips_rows(faces, strips, 5, 2, 1); // D <- L
-        turn_strips_cols(faces, strips, 1, 0, 0); // L <- U (reversed)
-
-        rotate_face(faces[4]);
+        // std::cout << "B\n";
+        // Strips strips; // [0->0, 1->1, 2->5, 3->3]
+        //
+        // // create strips that will turn
+        // strips[0] = faces[0][0]; // U
+        // std::reverse(std::begin(strips[0]), std::end(strips[0])); // reverse U
+        // strips[1] = create_strip(faces, 1, 0); // L
+        // strips[2] = faces[5][2]; // D
+        // std::reverse(std::begin(strips[2]), std::end(strips[2])); // reverse D
+        // strips[3] = create_strip(faces, 3, 2); // R
+        //
+        // // turn strip
+        // turn_strips_rows(faces, strips, 0, 0, 3); // U <- R
+        // turn_strips_cols(faces, strips, 3, 2, 2); // R <- D
+        // turn_strips_rows(faces, strips, 5, 2, 1); // D <- L
+        // turn_strips_cols(faces, strips, 1, 0, 0); // L <- U (reversed)
+        //
+        // rotate_face(faces[4]);
         break;
     }
     case Bp: {
@@ -145,64 +188,53 @@ void Cube::apply_move(Move m) { // change to switch statement??
 }
 
 bool Cube::is_solved() const {
-    for (int face = 0; face < 6; ++face) {
-        for (int row = 0; row < 3; ++row) {
-            for (int col = 0; col < 3; ++col) {
-                if (faces[face][row][col] != static_cast<Color>(face)) {
-                    return false;
-                }
-            }
+    for (int piece = 0; piece < 6 * size * size; ++piece) {
+        if (faces.at(piece) != static_cast<Color>(piece / (size * size))) {
+            return false;
         }
     }
     return true;
 }
 
 void Cube::scramble() {
-    this->apply_move(U);
-    this->apply_move(R);
-    this->apply_move(U);
+    this->apply_move(F);
 }
 
 void Cube::print() {
     // print U face
-    for (int row = 0; row < 3; ++row) {
-        std::cout << "\t";
-        for (int col = 0; col < 3; ++col) {
-            std::cout << color_to_string(faces[0][row][col]) << " ";
+    for (int row = 0; row < size; ++row) {
+        std::cout << "\t ";
+        for (int col = 0; col < size; ++col) {
+            std::cout << color_to_string(faces[row * size + col]) << " ";
         }
         std::cout << "\n";
     }
 
-    // print L, F, R, B faces
-    for (int row = 0; row < 3; ++row) {
+    // print L, F, R, B faces TODO: (rework this logic and reduce to single loop)
+    for (int row = 0; row < size; ++row) {
         for (int face = 1; face < 5; ++face) {
-            for (int col = 0; col < 3; ++col) {
-                std::cout << color_to_string(faces[face][row][col]) << " ";
+            for (int col = 0; col < size; ++col) {
+                std::cout << color_to_string(faces[face * (size * size) + (row * size) + col]) << " ";
             }
-            std::cout << "  ";
+            std::cout << " ";
         }
         std::cout << "\n";
     }
 
     // print D face
-    for (int row = 0; row < 3; ++row) {
-        std::cout << "\t";
-        for (int col = 0; col < 3; ++col) {
-            std::cout << color_to_string(faces[5][row][col]) << " ";
+    for (int row = 0; row < size; ++row) {
+        std::cout << "\t ";
+        for (int col = 0; col < size; ++col) {
+            std::cout << color_to_string(faces[5 * (size * size) + row * size + col]) << " ";
         }
         std::cout << "\n";
     }
 }
 
 bool Cube::operator==(const Cube& cube) const {
-    bool solved = false;
-    for (int face = 0; face < 6; ++face) {
-        for (int row = 0; row < 3; ++row) {
-            for (int col = 0; col < 3; ++col) {
-                if (faces[face][row][col] != cube.faces[face][row][col]) {
-                    return false;
-                }
-            }
+    for (int piece = 0; piece < 6 * size * size; ++piece) {
+        if (faces[piece] != cube.faces[piece]) {
+            return false;
         }
     }
     return true;
@@ -227,36 +259,22 @@ std::string color_to_string(Color c) {
     return "";
 }
 
-void rotate_face(Face& face) {
-    // matrix transpose (flip along main diagonal)
-    for (int i = 0; i < face.size(); ++i) {
-        for (int j = i + 1; j < face.size(); ++j) {
-            std::swap(face[i][j], face[j][i]);
-        }
-    }
-
-    // reverse each row
-    for (int i = 0; i < face.size(); ++i) {
-        std::reverse(std::begin(face[i]), std::end(face[i]));
-    }
-}
-
-std::array<Color, 3> create_strip(const Faces& faces, int face_id, int col) {
-    std::array<Color, 3> strip;
-    for (int i = 0; i < 3; ++i) {
-        strip[i] = faces[face_id][i][col];
-    }
-    return strip;
-}
-
-void turn_strips_cols(Faces& faces, const Strips& strips, int face_id, int col, int from_strip) {
-    for (int i = 0; i < 3; ++i) {
-        faces[face_id][i][col] = strips[from_strip][i];
-    }
-}
-
-void turn_strips_rows(Faces& faces, const Strips& strips, int face_id, int row, int from_strip) {
-    for (int i = 0; i < 3; ++i) {
-        faces[face_id][row][i] = strips[from_strip][i];
-    }
-}
+// std::array<Color, 3> create_strip(const Faces& faces, int face_id, int col) {
+//     std::array<Color, 3> strip;
+//     for (int i = 0; i < 3; ++i) {
+//         strip[i] = faces[face_id][i][col];
+//     }
+//     return strip;
+// }
+//
+// void turn_strips_cols(Faces& faces, const Strips& strips, int face_id, int col, int from_strip) {
+//     for (int i = 0; i < 3; ++i) {
+//         faces[face_id][i][col] = strips[from_strip][i];
+//     }
+// }
+//
+// void turn_strips_rows(Faces& faces, const Strips& strips, int face_id, int row, int from_strip) {
+//     for (int i = 0; i < 3; ++i) {
+//         faces[face_id][row][i] = strips[from_strip][i];
+//     }
+// }
