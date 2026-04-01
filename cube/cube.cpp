@@ -92,9 +92,9 @@ void Cube::apply_move(Move m) {
         std::swap(faces[27], faces[6]);
         std::swap(faces[30], faces[7]);
         std::swap(faces[33], faces[8]); // U->R
-        std::swap(faces[6], faces[11]);
+        std::swap(faces[6], faces[17]);
         std::swap(faces[7], faces[14]);
-        std::swap(faces[9], faces[17]); // L->U
+        std::swap(faces[8], faces[11]); // L->U
         std::swap(faces[11], faces[45]);
         std::swap(faces[14], faces[46]);
         std::swap(faces[17], faces[47]); // D->L and R->D
@@ -108,15 +108,15 @@ void Cube::apply_move(Move m) {
     }
     case Fp: {
         std::cout << "Fp\n";
-        std::swap(faces[27], faces[45]);
+        std::swap(faces[27], faces[47]);
         std::swap(faces[30], faces[46]);
-        std::swap(faces[33], faces[47]); // D->R
+        std::swap(faces[33], faces[45]); // D->R
         std::swap(faces[45], faces[11]);
         std::swap(faces[46], faces[14]);
         std::swap(faces[47], faces[17]); // L->D
-        std::swap(faces[11], faces[6]);
+        std::swap(faces[11], faces[8]);
         std::swap(faces[14], faces[7]);
-        std::swap(faces[17], faces[8]); // U->L and R->U
+        std::swap(faces[17], faces[6]); // U->L and R->U
         std::swap(faces[18], faces[24]);
         std::swap(faces[18], faces[20]);
         std::swap(faces[20], faces[26]); // corners rotate
@@ -127,61 +127,116 @@ void Cube::apply_move(Move m) {
     }
     case L: {
         std::cout << "L\n";
-        std::swap(faces[2], faces[42]);
-        std::swap(faces[5], faces[39]);
-        std::swap(faces[8], faces[36]); // B->U
-        std::swap(faces[42], faces[47]);
-        std::swap(faces[39], faces[50]);
-        std::swap(faces[36], faces[53]); // D->B
-        std::swap(faces[47], faces[20]);
-        std::swap(faces[50], faces[23]);
-        std::swap(faces[53], faces[26]); // F->D and U->F
-        std::swap(faces[27], faces[33]);
-        std::swap(faces[27], faces[29]);
-        std::swap(faces[29], faces[35]); // corners rotate
-        std::swap(faces[28], faces[30]);
-        std::swap(faces[28], faces[32]);
-        std::swap(faces[32], faces[34]); // edges rotate
+        std::swap(faces[0], faces[44]);
+        std::swap(faces[3], faces[41]);
+        std::swap(faces[6], faces[38]); // B->U
+        std::swap(faces[44], faces[45]);
+        std::swap(faces[41], faces[48]);
+        std::swap(faces[38], faces[51]); // D->B
+        std::swap(faces[45], faces[18]);
+        std::swap(faces[48], faces[21]);
+        std::swap(faces[51], faces[24]); // F->D and U->F
+        std::swap(faces[9], faces[11]);
+        std::swap(faces[9], faces[15]);
+        std::swap(faces[15], faces[17]); // corners rotate
+        std::swap(faces[10], faces[14]);
+        std::swap(faces[10], faces[12]);
+        std::swap(faces[12], faces[16]); // edges rotate
         break;
     }
     case Lp: {
+        std::cout << "Lp\n";
+        std::swap(faces[0], faces[18]);
+        std::swap(faces[3], faces[21]);
+        std::swap(faces[6], faces[24]); // F->U
+        std::swap(faces[18], faces[45]);
+        std::swap(faces[21], faces[48]);
+        std::swap(faces[24], faces[51]); // D->F
+        std::swap(faces[45], faces[44]);
+        std::swap(faces[48], faces[41]);
+        std::swap(faces[51], faces[38]); // B->D and U->B
+        std::swap(faces[9], faces[15]);
+        std::swap(faces[9], faces[11]);
+        std::swap(faces[11], faces[17]); // corners rotate
+        std::swap(faces[10], faces[12]);
+        std::swap(faces[10], faces[14]);
+        std::swap(faces[14], faces[16]); // edges rotate
         break;
     }
     case D: {
-        // std::cout << "D\n";
-        // std::array<Color, 3> temp = faces[4][2];
-        // faces[4][2] = faces[3][2];
-        // faces[3][2] = faces[2][2];
-        // faces[2][2] = faces[1][2];
-        // faces[1][2] = temp;
-        // rotate_face(faces[5]);
+        std::cout << "D\n";
+        std::swap(faces[33], faces[24]);
+        std::swap(faces[34], faces[25]);
+        std::swap(faces[35], faces[26]); // F->R
+        std::swap(faces[24], faces[15]);
+        std::swap(faces[25], faces[16]);
+        std::swap(faces[26], faces[17]); // L->F
+        std::swap(faces[15], faces[42]);
+        std::swap(faces[16], faces[43]);
+        std::swap(faces[17], faces[44]); // B->L and R->B
+        std::swap(faces[45], faces[47]);
+        std::swap(faces[45], faces[51]);
+        std::swap(faces[51], faces[53]); // corners rotate
+        std::swap(faces[46], faces[50]);
+        std::swap(faces[46], faces[48]);
+        std::swap(faces[48], faces[53]); // edges rotate
         break;
     }
     case Dp: {
+        std::cout << "Dp\n";
+        std::swap(faces[33], faces[42]);
+        std::swap(faces[34], faces[43]);
+        std::swap(faces[35], faces[44]); // B->R
+        std::swap(faces[42], faces[15]);
+        std::swap(faces[43], faces[16]);
+        std::swap(faces[44], faces[17]); // L->B
+        std::swap(faces[15], faces[24]);
+        std::swap(faces[16], faces[25]);
+        std::swap(faces[17], faces[26]); // F->L and R->F
+        std::swap(faces[45], faces[51]);
+        std::swap(faces[45], faces[47]);
+        std::swap(faces[47], faces[53]); // corners rotate
+        std::swap(faces[46], faces[48]);
+        std::swap(faces[46], faces[50]);
+        std::swap(faces[50], faces[53]); // edges rotate
         break;
     }
     case B: {
-        // std::cout << "B\n";
-        // Strips strips; // [0->0, 1->1, 2->5, 3->3]
-        //
-        // // create strips that will turn
-        // strips[0] = faces[0][0]; // U
-        // std::reverse(std::begin(strips[0]), std::end(strips[0])); // reverse U
-        // strips[1] = create_strip(faces, 1, 0); // L
-        // strips[2] = faces[5][2]; // D
-        // std::reverse(std::begin(strips[2]), std::end(strips[2])); // reverse D
-        // strips[3] = create_strip(faces, 3, 2); // R
-        //
-        // // turn strip
-        // turn_strips_rows(faces, strips, 0, 0, 3); // U <- R
-        // turn_strips_cols(faces, strips, 3, 2, 2); // R <- D
-        // turn_strips_rows(faces, strips, 5, 2, 1); // D <- L
-        // turn_strips_cols(faces, strips, 1, 0, 0); // L <- U (reversed)
-        //
-        // rotate_face(faces[4]);
+        std::cout << "B\n";
+        std::swap(faces[15], faces[0]);
+        std::swap(faces[12], faces[1]);
+        std::swap(faces[9], faces[2]); // U->L
+        std::swap(faces[0], faces[29]);
+        std::swap(faces[1], faces[32]);
+        std::swap(faces[2], faces[35]); // R->U
+        std::swap(faces[29], faces[53]);
+        std::swap(faces[32], faces[52]);
+        std::swap(faces[35], faces[51]); // D->R and L->D
+        std::swap(faces[36], faces[38]);
+        std::swap(faces[36], faces[42]);
+        std::swap(faces[42], faces[44]); // corners rotate
+        std::swap(faces[37], faces[41]);
+        std::swap(faces[37], faces[39]);
+        std::swap(faces[39], faces[43]); // edges rotate
         break;
     }
     case Bp: {
+        std::cout << "Bp\n";
+        std::swap(faces[15], faces[53]);
+        std::swap(faces[12], faces[52]);
+        std::swap(faces[9], faces[51]); // D->L
+        std::swap(faces[53], faces[29]);
+        std::swap(faces[52], faces[32]);
+        std::swap(faces[51], faces[35]); // R->D
+        std::swap(faces[29], faces[0]);
+        std::swap(faces[32], faces[1]);
+        std::swap(faces[35], faces[2]); // U->R and L->U
+        std::swap(faces[36], faces[42]);
+        std::swap(faces[36], faces[38]);
+        std::swap(faces[38], faces[44]); // corners rotate
+        std::swap(faces[37], faces[39]);
+        std::swap(faces[37], faces[41]);
+        std::swap(faces[41], faces[43]); // edges rotate
         break;
     }
     }
