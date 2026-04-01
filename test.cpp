@@ -4,6 +4,46 @@
 #include "cube.h"
 #include "search.h"
 
+TEST_CASE("equal cube check") {
+    Cube cube1{3};
+    Cube cube2{3};
+    Faces faces{
+        White, White, White, White, White, White, Green, Green, Green,
+        Green, Green, Yellow, Orange, Orange, Orange, Orange, Orange, Orange,
+        Red, Red, Red, Green, Green, Yellow, Green, Green, Yellow,
+        White, Blue, Blue, Red, Red, Red, Red, Red, Red,
+        Orange, Orange, Orange, White, Blue, Blue, White, Blue, Blue,
+        Yellow, Yellow, Blue, Yellow, Yellow, Blue, Yellow, Yellow, Blue
+    };
+    cube1.faces = faces;
+    CHECK_FALSE(cube1 == cube2);
+
+    cube2.faces = faces;
+    CHECK(cube1 == cube2);
+}
+
+TEST_CASE("check is_solved") {
+    Cube cube{3};
+    CHECK(cube.is_solved());
+
+    // set faces to a specific cube and check if solved
+    Faces faces{
+        White, White, White, White, White, White, Green, Green, Green,
+        Green, Green, Yellow, Orange, Orange, Orange, Orange, Orange, Orange,
+        Red, Red, Red, Green, Green, Yellow, Green, Green, Yellow,
+        White, Blue, Blue, Red, Red, Red, Red, Red, Red,
+        Orange, Orange, Orange, White, Blue, Blue, White, Blue, Blue,
+        Yellow, Yellow, Blue, Yellow, Yellow, Blue, Yellow, Yellow, Blue
+    };
+    cube.faces = faces;
+    CHECK_FALSE(cube.is_solved());
+
+    // scramble and check solved
+    Cube cube1{3};
+    cube1.scramble();
+    CHECK_FALSE(cube1.is_solved());
+}
+
 TEST_CASE("testing movements") {
     Cube cube1{3};
     Cube cube2{3};
@@ -38,12 +78,12 @@ TEST_CASE("testing movements") {
 
     // F turns
     Faces f_turn{
-        White, White, White, White, White, White, White, White, White,
-        Green, Green, Green, Orange, Orange, Orange, Orange, Orange, Orange,
-        Red, Red, Red, Green, Green, Green, Green, Green, Green,
-        Blue, Blue, Blue, Red, Red, Red, Red, Red, Red,
-        Orange, Orange, Orange, Blue, Blue, Blue, Blue, Blue, Blue,
-        Yellow, Yellow, Yellow, Yellow, Yellow, Yellow, Yellow, Yellow, Yellow
+        White, White, White, White, White, White, Orange, Orange, Orange,
+        Orange, Orange, Yellow, Orange, Orange, Yellow, Orange, Orange, Yellow,
+        Green, Green, Green, Green, Green, Green, Green, Green, Green,
+        White, Red, Red, White, Red, Red, White, Red, Red,
+        Blue, Blue, Blue, Blue, Blue, Blue, Blue, Blue, Blue,
+        Red, Red, Red, Yellow, Yellow, Yellow, Yellow, Yellow, Yellow
     };
     cube1.apply_move(F);
     CHECK(cube1.faces == f_turn);
@@ -52,25 +92,25 @@ TEST_CASE("testing movements") {
 
     // L turns
     Faces l_turn{
-        White, White, White, White, White, White, White, White, White,
+        Blue, White, White, Blue, White, White, Blue, White, White,
         Orange, Orange, Orange, Orange, Orange, Orange, Orange, Orange, Orange,
-        Green, Green, Green, Green, Green, Green, Green, Green, Green,
+        White, Green, Green, White, Green, Green, White, Green, Green,
         Red, Red, Red, Red, Red, Red, Red, Red, Red,
-        Orange, Orange, Orange, Blue, Blue, Blue, Blue, Blue, Blue,
-        Yellow, Yellow, Yellow, Yellow, Yellow, Yellow, Yellow, Yellow, Yellow
+        Blue, Blue, Yellow, Blue, Blue, Yellow, Blue, Blue, Yellow,
+        Green, Yellow, Yellow, Green, Yellow, Yellow, Green, Yellow, Yellow
     };
     cube1.apply_move(L);
-    CHECK(cube1.faces == L_turn);
+    CHECK(cube1.faces == l_turn);
     cube1.apply_move(Lp);
     CHECK(cube1 == cube2);
 
     // D turns
     Faces d_turn{
         White, White, White, White, White, White, White, White, White,
-        Green, Green, Green, Orange, Orange, Orange, Orange, Orange, Orange,
-        Red, Red, Red, Green, Green, Green, Green, Green, Green,
-        Blue, Blue, Blue, Red, Red, Red, Red, Red, Red,
-        Orange, Orange, Orange, Blue, Blue, Blue, Blue, Blue, Blue,
+        Orange, Orange, Orange, Orange, Orange, Orange, Blue, Blue, Blue,
+        Green, Green, Green, Green, Green, Green, Orange, Orange, Orange,
+        Red, Red, Red, Red, Red, Red, Green, Green, Green,
+        Blue, Blue, Blue, Blue, Blue, Blue, Red, Red, Red,
         Yellow, Yellow, Yellow, Yellow, Yellow, Yellow, Yellow, Yellow, Yellow
     };
     cube1.apply_move(D);
@@ -80,12 +120,12 @@ TEST_CASE("testing movements") {
 
     // B turns
     Faces b_turn{
-        White, White, White, White, White, White, White, White, White,
-        Green, Green, Green, Orange, Orange, Orange, Orange, Orange, Orange,
-        Red, Red, Red, Green, Green, Green, Green, Green, Green,
-        Blue, Blue, Blue, Red, Red, Red, Red, Red, Red,
-        Orange, Orange, Orange, Blue, Blue, Blue, Blue, Blue, Blue,
-        Yellow, Yellow, Yellow, Yellow, Yellow, Yellow, Yellow, Yellow, Yellow
+        Red, Red, Red, White, White, White, White, White, White,
+        White, Orange, Orange, White, Orange, Orange, White, Orange, Orange,
+        Green, Green, Green, Green, Green, Green, Green, Green, Green,
+        Red, Red, Yellow, Red, Red, Yellow, Red, Red, Yellow,
+        Blue, Blue, Blue, Blue, Blue, Blue, Blue, Blue, Blue,
+        Yellow, Yellow, Yellow, Yellow, Yellow, Yellow, Orange, Orange, Orange
     };
     cube1.apply_move(B);
     CHECK(cube1.faces == b_turn);
