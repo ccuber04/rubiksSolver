@@ -12,3 +12,6 @@ add_subdirectory(cube)
 
 add_executable(solver main.cpp)
 target_link_libraries(solver PUBLIC cube search)
+
+add_executable(test test.cpp doctest.h)
+target_link_libraries(test PUBLIC cube search)
