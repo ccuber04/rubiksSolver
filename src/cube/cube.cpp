@@ -313,23 +313,3 @@ std::string color_to_string(Color c) {
     }
     return "";
 }
-
-// std::array<Color, 3> create_strip(const Faces& faces, int face_id, int col) {
-//     std::array<Color, 3> strip;
-//     for (int i = 0; i < 3; ++i) {
-//         strip[i] = faces[face_id][i][col];
-//     }
-//     return strip;
-// }
-//
-// void turn_strips_cols(Faces& faces, const Strips& strips, int face_id, int col, int from_strip) {
-//     for (int i = 0; i < 3; ++i) {
-//         faces[face_id][i][col] = strips[from_strip][i];
-//     }
-// }
-//
-// void turn_strips_rows(Faces& faces, const Strips& strips, int face_id, int row, int from_strip) {
-//     for (int i = 0; i < 3; ++i) {
-//         faces[face_id][row][i] = strips[from_strip][i];
-//     }
-// }
