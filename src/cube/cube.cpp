@@ -179,7 +179,7 @@ void Cube::apply_move(Move m) {
         std::swap(faces[51], faces[53]); // corners rotate
         std::swap(faces[46], faces[50]);
         std::swap(faces[46], faces[48]);
-        std::swap(faces[48], faces[53]); // edges rotate
+        std::swap(faces[48], faces[52]); // edges rotate
         break;
     }
     case Dp: {
@@ -198,7 +198,7 @@ void Cube::apply_move(Move m) {
         std::swap(faces[47], faces[53]); // corners rotate
         std::swap(faces[46], faces[48]);
         std::swap(faces[46], faces[50]);
-        std::swap(faces[50], faces[53]); // edges rotate
+        std::swap(faces[50], faces[52]); // edges rotate
         break;
     }
     case B: {
