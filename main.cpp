@@ -1,7 +1,7 @@
 #include <chrono>
+#include <iostream>
 
 #include "cube.h"
-#include "iostream"
 #include "problem.h"
 #include "node.h"
 #include "search.h"
@@ -12,7 +12,7 @@ std::list<Move> actions(const Cube& cube);
 double action_cost(const Cube&, const Move&, const Cube&);
 
 int main() {
-    Cube cube(3);
+    Cube cube{3};
     cube.print();
     cube.scramble();
     cube.print();

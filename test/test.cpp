@@ -18,7 +18,6 @@ TEST_CASE("check construction") {
 }
 
 TEST_CASE("equal cube check") {
-    std::cout << "TEST IS RUNNING\n";
     Cube cube1{3};
     Cube cube2{3};
     Faces faces{
