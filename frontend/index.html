@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>CCuber's Solver</title>
+        <script type="module" src="/app.js"></script>
+        <script src="https://cdn.cubing.net/v0/js/cubing/twisty" type="module"></script>
+    </head>
+    <body>
+        <h1>CCuber's Solver</h1>
+
+        <div id="cube-container">
+            <twisty-player 
+                experimental-setup-alg="R U R' U'" 
+                alg="U R U' R'"></twisty-player>
+            <p id="scramble-display"></p>
+            <p id="solution-display"></p>
+        </div>
+
+        <button id="scramble-btn">Generate New Scramble</button>
+        <button id="show-solve-btn">Show Solve</button>
+    </body>
+</html>
