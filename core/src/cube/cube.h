@@ -4,9 +4,26 @@
 #include <string>
 
 enum Color {White, Orange, Green, Red, Blue, Yellow};
-enum Move {R, Rp, U, Up, F, Fp, L, Lp, D, Dp, B, Bp};
+enum Move {R, Rp, R2, U, Up, U2, F, Fp, F2, L, Lp, L2, D, Dp, D2, B, Bp, B2};
 
 using Faces = std::vector<Color>;
+
+constexpr int CORNERS[8][3] {
+     {0, 9, 38}, // ULB
+     {2, 29, 36}, // URB
+     {6, 11, 18}, // ULF
+     {8, 20, 27}, // UFR
+     {17, 24, 45}, // LFD
+     {26, 33, 47}, // FRD
+     {15, 44, 51}, // LBD
+     {35, 42, 53} // RBD
+};
+
+constexpr int EDGES[12][2] {
+     {1, 37}, {3, 10}, {5, 28}, {7, 19}, // UB UL UR UF
+     {14, 21}, {23, 30}, {32, 39}, {41, 12}, // LF FR RB BL
+     {46, 25}, {48, 16}, {50, 34}, {52, 43} // DF DL DR DB
+};
 
 class Cube {
 public:
@@ -15,6 +32,9 @@ public:
      bool is_solved() const;
      void scramble();
      void print();
+
+     bool edge_oriented(int edge);
+     int corner_oriented(int corner);
 
      bool operator==(const Cube &) const;
 

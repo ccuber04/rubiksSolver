@@ -49,6 +49,11 @@ void Cube::apply_move(Move m) {
         std::swap(faces[32], faces[34]); // edges rotate
         break;
     }
+    case R2: {
+        apply_move(R);
+        apply_move(R);
+        break;
+    }
     case U: {
         std::cout << "U\n";
         std::swap(faces[9], faces[18]);
@@ -85,6 +90,11 @@ void Cube::apply_move(Move m) {
         std::swap(faces[1], faces[3]);
         std::swap(faces[1], faces[5]);
         std::swap(faces[5], faces[7]); // edges rotate
+        break;
+    }
+    case U2: {
+        apply_move(U);
+        apply_move(U);
         break;
     }
     case F: {
@@ -125,6 +135,11 @@ void Cube::apply_move(Move m) {
         std::swap(faces[23], faces[25]); // edges rotate
         break;
     }
+    case F2: {
+        apply_move(F);
+        apply_move(F);
+        break;
+    }
     case L: {
         std::cout << "L\n";
         std::swap(faces[0], faces[44]);
@@ -163,6 +178,10 @@ void Cube::apply_move(Move m) {
         std::swap(faces[14], faces[16]); // edges rotate
         break;
     }
+    case L2: {
+        apply_move(L);
+        apply_move(L);
+    }
     case D: {
         std::cout << "D\n";
         std::swap(faces[33], faces[24]);
@@ -199,6 +218,11 @@ void Cube::apply_move(Move m) {
         std::swap(faces[46], faces[48]);
         std::swap(faces[46], faces[50]);
         std::swap(faces[50], faces[52]); // edges rotate
+        break;
+    }
+    case D2: {
+        apply_move(D);
+        apply_move(D);
         break;
     }
     case B: {
@@ -239,6 +263,11 @@ void Cube::apply_move(Move m) {
         std::swap(faces[41], faces[43]); // edges rotate
         break;
     }
+    case B2: {
+        apply_move(B);
+        apply_move(B);
+        break;
+    }
     }
 }
 
@@ -265,7 +294,7 @@ void Cube::print() {
         std::cout << "\n";
     }
 
-    // print L, F, R, B faces TODO: (rework this logic and reduce to single loop)
+    // print L, F, R, B faces
     for (int row = 0; row < size; ++row) {
         for (int face = 1; face < 5; ++face) {
             for (int col = 0; col < size; ++col) {
@@ -284,6 +313,44 @@ void Cube::print() {
         }
         std::cout << "\n";
     }
+}
+
+bool Cube::edge_oriented(int edge) {
+    int a = EDGES[edge][0];
+    int b = EDGES[edge][1];
+
+    Color ca = faces[a];
+    Color cb = faces[b];
+
+    if (ca == White || ca == Yellow) {
+        return a < 9 || a > 44;
+    }
+    if (cb == White || cb == Yellow) {
+        return b < 9 || b > 44;
+    }
+    if (ca == Green || ca == Blue) {
+        return (a > 17 && a < 27) || (a > 35 && a < 45);
+    }
+    if (cb == Green || cb == Blue) {
+        return (b > 17 && b < 27) || (b > 35 && b < 45);
+    }
+}
+
+int Cube::corner_oriented(int corner) {
+    for (int i = 0; i < 3; ++i) {
+        int sticker = CORNERS[corner][i];
+        Color c = faces[sticker];
+        if (c == White || c == Yellow) {
+            if (sticker < 9 || sticker > 44) {
+                return 0;
+            }
+            if ((sticker > 8 && sticker < 18) || (sticker > 26 && sticker < 36)) {
+                return 1;
+            }
+            return 2;
+        }
+    }
+    return -1;
 }
 
 bool Cube::operator==(const Cube& cube) const {
