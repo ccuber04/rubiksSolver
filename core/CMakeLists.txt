@@ -9,7 +9,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_subdirectory(src)
 
 add_executable(solver main.cpp)
-target_link_libraries(solver PUBLIC cube search)
+target_link_libraries(solver PUBLIC cube)
 
 enable_testing()
 

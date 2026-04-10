@@ -1,18 +1,19 @@
 #include "cube.h"
+
 #include <iostream>
 #include <algorithm>
+#include <sstream>
 
-Cube::Cube(int size)
+Cube::Cube(const int& size)
     : size{size}, faces(6*size*size) {
     for (int piece = 0; piece < 6 * size * size; ++piece) { // (0-8) white, (9-17) orange, (18-26) green, (27-35) red, (36-44) blue, (45-53) yellow
         faces[piece] = static_cast<Color>(piece / (size * size));
     }
 }
 
-void Cube::apply_move(Move m) {
+void Cube::apply_move(const Move& m) {
     switch (m) {
     case R: {
-        std::cout << "R\n";
         std::swap(faces[2], faces[20]);
         std::swap(faces[5], faces[23]);
         std::swap(faces[8], faces[26]); // F->U
@@ -31,7 +32,6 @@ void Cube::apply_move(Move m) {
         break;
     }
     case Rp: {
-        std::cout << "Rp\n";
         std::swap(faces[2], faces[42]);
         std::swap(faces[5], faces[39]);
         std::swap(faces[8], faces[36]); // B->U
@@ -55,7 +55,6 @@ void Cube::apply_move(Move m) {
         break;
     }
     case U: {
-        std::cout << "U\n";
         std::swap(faces[9], faces[18]);
         std::swap(faces[10], faces[19]);
         std::swap(faces[11], faces[20]); // F->L
@@ -74,7 +73,6 @@ void Cube::apply_move(Move m) {
         break;
     }
     case Up: {
-        std::cout << "Up\n";
         std::swap(faces[9], faces[36]);
         std::swap(faces[10], faces[37]);
         std::swap(faces[11], faces[38]); // B->L
@@ -98,7 +96,6 @@ void Cube::apply_move(Move m) {
         break;
     }
     case F: {
-        std::cout << "F\n";
         std::swap(faces[27], faces[6]);
         std::swap(faces[30], faces[7]);
         std::swap(faces[33], faces[8]); // U->R
@@ -117,7 +114,6 @@ void Cube::apply_move(Move m) {
         break;
     }
     case Fp: {
-        std::cout << "Fp\n";
         std::swap(faces[27], faces[47]);
         std::swap(faces[30], faces[46]);
         std::swap(faces[33], faces[45]); // D->R
@@ -141,7 +137,6 @@ void Cube::apply_move(Move m) {
         break;
     }
     case L: {
-        std::cout << "L\n";
         std::swap(faces[0], faces[44]);
         std::swap(faces[3], faces[41]);
         std::swap(faces[6], faces[38]); // B->U
@@ -160,7 +155,6 @@ void Cube::apply_move(Move m) {
         break;
     }
     case Lp: {
-        std::cout << "Lp\n";
         std::swap(faces[0], faces[18]);
         std::swap(faces[3], faces[21]);
         std::swap(faces[6], faces[24]); // F->U
@@ -181,9 +175,9 @@ void Cube::apply_move(Move m) {
     case L2: {
         apply_move(L);
         apply_move(L);
+        break;
     }
     case D: {
-        std::cout << "D\n";
         std::swap(faces[33], faces[24]);
         std::swap(faces[34], faces[25]);
         std::swap(faces[35], faces[26]); // F->R
@@ -202,7 +196,6 @@ void Cube::apply_move(Move m) {
         break;
     }
     case Dp: {
-        std::cout << "Dp\n";
         std::swap(faces[33], faces[42]);
         std::swap(faces[34], faces[43]);
         std::swap(faces[35], faces[44]); // B->R
@@ -226,7 +219,6 @@ void Cube::apply_move(Move m) {
         break;
     }
     case B: {
-        std::cout << "B\n";
         std::swap(faces[15], faces[0]);
         std::swap(faces[12], faces[1]);
         std::swap(faces[9], faces[2]); // U->L
@@ -245,7 +237,6 @@ void Cube::apply_move(Move m) {
         break;
     }
     case Bp: {
-        std::cout << "Bp\n";
         std::swap(faces[15], faces[53]);
         std::swap(faces[12], faces[52]);
         std::swap(faces[9], faces[51]); // D->L
@@ -280,8 +271,14 @@ bool Cube::is_solved() const {
     return true;
 }
 
-void Cube::scramble() {
-    this->apply_move(F);
+void Cube::scramble(const std::string& scramble) {
+    std::cout << "Scramble: " << scramble << "\n";
+    auto iss = std::istringstream{scramble};
+    std::string move{};
+    while (iss >> move) {
+        Move m = string_to_move(move);
+        apply_move(m);
+    }
 }
 
 void Cube::print() {
@@ -315,7 +312,7 @@ void Cube::print() {
     }
 }
 
-bool Cube::edge_oriented(int edge) {
+bool Cube::edge_oriented(const int& edge) const {
     int a = EDGES[edge][0];
     int b = EDGES[edge][1];
 
@@ -334,9 +331,10 @@ bool Cube::edge_oriented(int edge) {
     if (cb == Green || cb == Blue) {
         return (b > 17 && b < 27) || (b > 35 && b < 45);
     }
+    return false;
 }
 
-int Cube::corner_oriented(int corner) {
+int Cube::corner_oriented(const int& corner) const {
     for (int i = 0; i < 3; ++i) {
         int sticker = CORNERS[corner][i];
         Color c = faces[sticker];
@@ -353,6 +351,63 @@ int Cube::corner_oriented(int corner) {
     return -1;
 }
 
+int Cube::unoriented_heuristic() const {
+    int count = 0;
+
+    // unoriented edge count
+    for (int i = 0; i < 12; ++i) {
+        if (!edge_oriented(i)) {
+            ++count;
+        }
+    }
+
+    // unoriented corner count
+    for (int i = 0; i < 8; ++i) {
+        if (corner_oriented(i) != 0) {
+            ++count;
+        }
+    }
+    return count;
+}
+
+int Cube::max_heuristic() const {
+    // unoriented edge count
+    int edge_count = 0;
+    for (int i = 0; i < 12; ++i) {
+        if (!edge_oriented(i)) {
+            ++edge_count;
+        }
+    }
+
+    // unoriented corner count
+    int corner_count = 0;
+    for (int i = 0; i < 8; ++i) {
+        if (corner_oriented(i) != 0) {
+            ++corner_count;
+        }
+    }
+    return std::max(edge_count, corner_count);
+}
+
+int Cube::max_sum_heuristic() const {
+    // unoriented edge count
+    int edge_count = 0;
+    for (int i = 0; i < 12; ++i) {
+        if (!edge_oriented(i)) {
+            ++edge_count;
+        }
+    }
+
+    // unoriented corner count
+    int corner_count = 0;
+    for (int i = 0; i < 8; ++i) {
+        if (corner_oriented(i) != 0) {
+            ++corner_count;
+        }
+    }
+    return std::max(edge_count, corner_count) + (edge_count + corner_count)/4;
+}
+
 bool Cube::operator==(const Cube& cube) const {
     for (int piece = 0; piece < 6 * size * size; ++piece) {
         if (faces[piece] != cube.faces[piece]) {
@@ -363,20 +418,61 @@ bool Cube::operator==(const Cube& cube) const {
 }
 
 // helpers
-std::string color_to_string(Color c) {
+std::string color_to_string(const Color& c) {
     switch (c) {
-    case White:
-        return "W";
-    case Green:
-        return "G";
-    case Yellow:
-        return "Y";
-    case Orange:
-        return "O";
-    case Red:
-        return "R";
-    case Blue:
-        return "B";
+    case White: return "W";
+    case Green: return "G";
+    case Yellow: return "Y";
+    case Orange: return "O";
+    case Red: return "R";
+    case Blue: return "B";
     }
     return "";
+}
+
+std::string move_to_string(const Move& m) {
+    switch (m) {
+    case R: return "R";
+    case Rp: return "R'";
+    case R2: return "R2";
+    case U: return "U";
+    case Up: return "U'";
+    case U2: return "U2";
+    case F: return "F";
+    case Fp: return "F'";
+    case F2: return "F2";
+    case L: return "L";
+    case Lp: return "L'";
+    case L2: return "L2";
+    case D: return "D";
+    case Dp: return "D'";
+    case D2: return "D2";
+    case B: return "B";
+    case Bp: return "B'";
+    case B2: return "B2";
+    }
+    return "Not a move";
+}
+
+Move string_to_move(const std::string& move) {
+    if (move == "R") return R;
+    if (move == "R'") return Rp;
+    if (move == "R2") return R2;
+    if (move == "U") return U;
+    if (move == "U'") return Up;
+    if (move == "U2") return U2;
+    if (move == "F") return F;
+    if (move == "F'") return Fp;
+    if (move == "F2") return F2;
+    if (move == "L") return L;
+    if (move == "L'") return Lp;
+    if (move == "L2") return L2;
+    if (move == "D") return D;
+    if (move == "D'") return Dp;
+    if (move == "D2") return D2;
+    if (move == "B") return B;
+    if (move == "B'") return Bp;
+    if (move == "B2") return B2;
+
+    throw std::invalid_argument("Invalid move string: " + move);
 }

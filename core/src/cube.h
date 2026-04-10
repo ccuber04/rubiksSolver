@@ -27,14 +27,18 @@ constexpr int EDGES[12][2] {
 
 class Cube {
 public:
-     Cube(int size);
-     void apply_move(Move m);
+     Cube(const int& size);
+     void apply_move(const Move& m);
      bool is_solved() const;
-     void scramble();
+     void scramble(const std::string& scramble);
      void print();
 
-     bool edge_oriented(int edge);
-     int corner_oriented(int corner);
+     bool edge_oriented(const int& edge) const;
+     int corner_oriented(const int& corner) const;
+
+     int unoriented_heuristic() const;
+     int max_heuristic() const;
+     int max_sum_heuristic() const;
 
      bool operator==(const Cube &) const;
 
@@ -42,7 +46,9 @@ public:
      Faces faces;
 };
 
-std::string color_to_string(Color c);
+std::string color_to_string(const Color& c);
+std::string move_to_string(const Move& m);
+Move string_to_move(const std::string& move);
 
 // template<>
 // struct std::hash<Cube> {

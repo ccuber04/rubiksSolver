@@ -2,7 +2,7 @@
 #include "doctest.h"
 
 #include "cube.h"
-// #include "search.h"
+#include "search.h"
 
 TEST_CASE("check construction") {
     Cube cube{3};
@@ -50,11 +50,42 @@ TEST_CASE("check is_solved") {
     };
     cube.faces = faces;
     CHECK_FALSE(cube.is_solved());
+}
 
+TEST_CASE("check scramble") {
     // scramble and check solved
     Cube cube1{3};
-    cube1.scramble();
+    cube1.scramble("R U R' U R U2 R'");
     CHECK_FALSE(cube1.is_solved());
+    Faces faces {
+        Green, White, White, White, White, White, Red, White, Blue,
+        White, Blue, Blue, Orange, Orange, Orange, Orange, Orange, Orange,
+        White, Green, Orange, Green, Green, Green, Green, Green, Green,
+        White, Orange, Orange, Red, Red, Red, Red, Red, Red,
+        Green, Red, Red, Blue, Blue, Blue, Blue, Blue, Blue,
+        Yellow, Yellow, Yellow, Yellow, Yellow, Yellow, Yellow, Yellow, Yellow
+    };
+    CHECK(cube1.faces == faces);
+}
+
+TEST_CASE("unoriented pieces") {
+    Cube cube{3};
+    cube.scramble("R U R' U'");
+    CHECK(cube.edge_oriented(0));
+    CHECK_FALSE(cube.edge_oriented(2));
+    CHECK_FALSE(cube.edge_oriented(5));
+    CHECK(cube.corner_oriented(0) == 0);
+    CHECK(cube.corner_oriented(1) == 1);
+    CHECK(cube.corner_oriented(3) == 2);
+    CHECK(cube.corner_oriented(5) == 1);
+}
+
+TEST_CASE("cube heuristic check") {
+    Cube cube{3};
+    cube.scramble("R U R' U'");
+    CHECK(cube.unoriented_heuristic() == 5);
+    CHECK(cube.max_heuristic() == 3);
+    CHECK(cube.max_sum_heuristic() == 4);
 }
 
 TEST_CASE("testing movements") {
