@@ -1,14 +1,44 @@
 #include "search.h"
 
 #include <climits>
+#include <unordered_set>
+
+Node* breadth_first_search(const Cube& cube) {
+    Node* node = new Node{cube};
+    if (cube.is_solved()) {
+        return node;
+    }
+    std::deque<Node*> frontier{node};
+    std::unordered_set<Cube> reached{cube};
+
+    while (!frontier.empty()) {
+        Node* front = frontier.front();
+        frontier.pop_front();
+        for (Move m : ALL_MOVES) {
+            Cube child = front->cube;
+            child.apply_move(m);
+            Node* child_node = new Node{child, front, m};
+
+            if (child.is_solved()) {
+                return child_node;
+            }
+
+            if (!reached.contains(child)) {
+                reached.insert(child);
+                frontier.push_back(child_node);
+            }
+        }
+    }
+    return nullptr;
+}
 
 std::pair<std::deque<Cube>, std::vector<Move>> ida_star(const Cube& cube) {
-    int bound = cube.unoriented_heuristic();
+    int bound = cube.max_sum_heuristic();
     std::deque path{cube};
     std::vector<Move> moves{};
 
     while (true) {
-        int t = depth_first_search(path, moves, 0, bound, unoriented_heuristic);
+        int t = depth_first_search(path, moves, 0, bound, max_sum_heuristic);
         if (t == FOUND) {
             return {path, moves};
         }

@@ -50,17 +50,13 @@ std::string color_to_string(const Color& c);
 std::string move_to_string(const Move& m);
 Move string_to_move(const std::string& move);
 
-// template<>
-// struct std::hash<Cube> {
-//      std::size_t operator()(const Cube& cube) const noexcept {
-//            std::size_t hash_value{0};
-//            for (int face = 0; face < 6; ++face) {
-//                 for (int row = 0; row < 3; ++row) {
-//                      for (int col = 0; col < 3; ++col) {
-//                           hash_value = hash_value * 31 + static_cast<int>(cube.faces[face][row][col]);
-//                      }
-//                 }
-//            }
-//            return hash_value;
-//      }
-// };
+template<>
+struct std::hash<Cube> {
+     std::size_t operator()(const Cube& cube) const noexcept {
+           std::size_t hash_value{0};
+          for (auto f : cube.faces) {
+               hash_value = hash_value * 31 + static_cast<int>(f);
+          }
+          return hash_value;
+     }
+};

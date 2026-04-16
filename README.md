@@ -44,3 +44,37 @@ the UI.
 ## Phase 1
 Notes from learning group theory.
 ![img.png](img.png)
+
+## Algorithm Comparison
+| Algorithm                | Scramble Length | Runtime |
+|--------------------------|-----------------|---------|
+| Breadth First Search     | 5               | 0s      |
+| Breadth First Search     | 6               | 6s      |
+| Breadth First Search     | 7               | 17s     |
+| Breadth First Search     | 8               | timeout |
+| IDA* Count Misoriented   | 5               | 5s      |
+| IDA* Count Misoriented   | 6               | 29s     |
+| IDA* Count Misoriented   | 7               | 64s     |
+| IDA* Count Misoriented   | 8               | timeout |
+| IDA* Max Sum Misoriented | 10              | 3s      |
+| IDA* Max Sum Misoriented | 11              | 11s     |
+| IDA* Max Sum Misoriented | 12              | 73s     |
+| IDA* Max Misoriented     | 11              | 2s      |
+| IDA* Max Misoriented     | 12              | 12s     |
+| IDA* Max Misoriented     | 13              | 23s     |
+| IDA* Max Misoriented     | 14              | 167s    |
+| IDA* Max Misoriented     | 15              | 13168s  |
+
+
+
+
+
+
+
+
+
+
+
+
+
+

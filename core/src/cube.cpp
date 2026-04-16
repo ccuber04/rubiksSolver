@@ -409,12 +409,7 @@ int Cube::max_sum_heuristic() const {
 }
 
 bool Cube::operator==(const Cube& cube) const {
-    for (int piece = 0; piece < 6 * size * size; ++piece) {
-        if (faces[piece] != cube.faces[piece]) {
-            return false;
-        }
-    }
-    return true;
+    return faces == cube.faces;
 }
 
 // helpers
