@@ -20,3 +20,10 @@ std::vector<Move> Node::moves() {
     std::reverse(moves.begin(), moves.end());
     return moves;
 }
+
+int Node::depth() {
+    if (parent == nullptr) {
+        return 1;
+    }
+    return parent->depth() + 1;
+}

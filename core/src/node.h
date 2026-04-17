@@ -9,6 +9,7 @@ public:
     ~Node();
 
     std::vector<Move> moves();
+    int depth();
 
     Cube cube;
     Node* parent;
