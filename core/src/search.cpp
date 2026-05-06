@@ -43,7 +43,7 @@ Node* bidirectional_best_first_search(const Cube& cube) {
     while (!terminated(solution, frontier_front, frontier_back)) {
         Node* front_top = frontier_front.top();
         Node* back_top = frontier_back.top();
-        if (front_top->cube.max_heuristic() < back_top->cube.max_heuristic()) {
+        if (front_top->cube.max_heuristic() < back_top->cube.max_heuristic()) { // TODO: reverse heuristic from solved state
             solution = proceed(true, frontier_front, reached_front, reached_back, solution);
         }
         else {
